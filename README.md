@@ -25,12 +25,23 @@ pane* and resuming it automatically.
 
 ## Installation
 
-**1. WezTerm config** — in `~/.config/wezterm/wezterm.lua` (or `~/.wezterm.lua`):
+**1. WezTerm config** — add the plugin to your WezTerm config. That's
+whichever file you already have: `~/.config/wezterm/wezterm.lua` or
+`~/.wezterm.lua` (WezTerm uses the first one it finds; if you have neither,
+create the former). A minimal complete config looks like:
 
 ```lua
+local wezterm = require 'wezterm'
+local config = wezterm.config_builder()
+
 local session_restore = wezterm.plugin.require 'https://github.com/neerajsingh0101/wezterm-session-restore'
 session_restore.setup(config)
+
+return config
 ```
+
+Already have a config? Just add the two `session_restore` lines before
+`return config`.
 
 **2. Claude Code hook** — clone this repo and run:
 
