@@ -56,10 +56,12 @@ return config
 
 **3. Add the Claude Code hook**
 
-Download the hook script. Each time a Claude Code session starts, this script
+This is what the wezterm-session-restore script does. Each time a Claude Code session starts, this script
 records the session id and working directory against the WezTerm pane it is
 running in — after a restart, the plugin reads those records to resume the
-right session in the right pane:
+right session in the right pane.
+
+First, let's download this script.
 
 ```sh
 mkdir -p ~/.claude/hooks
@@ -67,10 +69,8 @@ curl -fsSL https://raw.githubusercontent.com/neerajsingh0101/wezterm-session-res
   -o ~/.claude/hooks/wezterm-session-restore.sh
 ```
 
-Downloading alone does nothing yet: Claude Code only runs hooks that are
-registered in `~/.claude/settings.json`. This command registers it, and
-handles every case — no settings file, no `hooks` section, or existing hooks
-(which it leaves untouched). It is safe to run more than once:
+Downloading alone does nothing yet. Claude Code only runs hooks that are
+registered in `~/.claude/settings.json`. Next command registers it. It is safe to run the next command more than once.
 
 ```sh
 [ -f ~/.claude/settings.json ] || echo '{}' > ~/.claude/settings.json
@@ -80,7 +80,8 @@ grep -q wezterm-session-restore ~/.claude/settings.json || {
 }
 ```
 
-Check that it worked — this should print the hook line:
+Now let's check whether things are looking good.
+Execute the next command to ensure that it prints the value that is expected.
 
 ```sh
 grep wezterm-session-restore ~/.claude/settings.json
