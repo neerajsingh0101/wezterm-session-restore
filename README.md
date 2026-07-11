@@ -23,7 +23,7 @@ pane* and resuming it automatically.
   sessions whose working directory was a git worktree.
 - `--dangerously-skip-permissions` is preserved if the original session used it.
 
-## Install
+## Installation
 
 **1. WezTerm config** — in `~/.config/wezterm/wezterm.lua` (or `~/.wezterm.lua`):
 
@@ -74,16 +74,8 @@ old — a tab you opened or a Claude session you started 30 seconds ago may not
 be in it yet. That's what save-on-demand is for: before a *planned* restart,
 press `Ctrl+Opt+S`. It takes the same snapshot immediately and confirms with a
 "Session saved" notification, so the restore reflects the exact moment you
-left. The keybinding can be changed or disabled — see below.
-
-## Options
-
-```lua
-session_restore.setup(config, {
-  save_interval_seconds = 60,                 -- layout snapshot cadence
-  save_key = { key = 's', mods = 'CTRL|OPT' } -- save-now binding; false to disable
-})
-```
+left. The save interval and keybinding are configurable:
+`session_restore.setup(config, { save_interval_seconds = 60, save_key = false })`.
 
 ## How it works
 
