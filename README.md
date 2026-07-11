@@ -23,12 +23,6 @@ pane* and resuming it automatically.
   sessions whose working directory was a git worktree.
 - `--dangerously-skip-permissions` is preserved if the original session used it.
 
-## Requirements
-
-- WezTerm `20240203-110809-5046fc22` or newer (macOS or Linux)
-- [Claude Code](https://claude.com/claude-code)
-- `jq`
-
 ## Install
 
 **1. WezTerm config** — in `~/.config/wezterm/wezterm.lua` (or `~/.wezterm.lua`):
