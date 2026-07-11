@@ -129,15 +129,71 @@ left. The save interval and keybinding are configurable:
 
 ## How it works
 
-1. The `SessionStart` hook records `{session_id, cwd, command}` per WezTerm
-   pane under `~/.local/state/wezterm-session-restore/claude/` — event-driven,
-   so it is always current.
-2. Every save interval, resurrect.wezterm snapshots the layout, and this
-   plugin writes a manifest of panes whose foreground process (or one of its
-   descendants) is `claude`, joined with the recorded session ids.
-3. On `gui-startup`, the layout is rebuilt; panes with a manifest entry run
-   `cd <session-cwd> && claude --resume <id>` instead of the default process
-   relaunch, so you resume the conversation rather than starting a fresh one.
+There are three moving parts: a hook that records which Claude session lives
+in which pane, a periodic snapshot of your layout, and a restore step that
+puts the two back together after a restart.
+
+### 1. Recording sessions (the hook, event-driven)
+
+WezTerm sets a `WEZTERM_PANE` environment variable in every pane, and every
+process started in that pane inherits it — including Claude Code and,
+crucially, the hook scripts Claude Code runs.
+
+Claude Code fires the `SessionStart` hook every time a session begins — a
+fresh `claude`, a `claude --resume`, or a `/clear`. When it fires, the hook
+script knows two things at once: which session just started (Claude passes
+the session id and working directory on stdin) and which pane it happened in
+(`$WEZTERM_PANE`). It writes them to one small file per pane:
+
+```json
+// ~/.local/state/wezterm-session-restore/claude/pane-42.json
+{
+  "session_id": "3f9c2a71-...",
+  "cwd": "/Users/you/code/my-project",
+  "command": "claude --dangerously-skip-permissions"
+}
+```
+
+The `session_id` is what `claude --resume` needs later. The `cwd` is Claude's
+own working directory, which is not always the pane's directory (worktree
+sessions, for example). The `command` preserves flags like
+`--dangerously-skip-permissions`. Because the hook fires on every session
+start, these files are always current — nothing polls, nothing goes stale.
+
+### 2. Snapshotting the layout (the plugin, every 60 seconds)
+
+On a timer, resurrect.wezterm walks all your windows, tabs and panes and
+saves their arrangement — split geometry, working directories, scrollback —
+to JSON state files.
+
+Right after each snapshot, this plugin walks the same panes and asks WezTerm
+what each one is running. A pane counts as a Claude pane if its foreground
+process — or any descendant of it — is `claude` (the descendant check is what
+makes sessions started through wrapper scripts work). For every Claude pane
+it finds, it reads that pane's file from step 1 and writes everything into
+one manifest: pane position, pane directory, session id, session directory,
+and command line.
+
+Why store positions and directories instead of pane ids? Because pane ids do
+not survive a restart — WezTerm hands out fresh ids on every launch. The
+manifest therefore describes panes by the things that *do* survive: where the
+pane was and what directory it was in.
+
+### 3. Restoring (on WezTerm startup)
+
+When WezTerm starts, the plugin reads the last snapshot and rebuilds it:
+windows, tabs, splits, working directories. Plain shell panes get their
+scrollback re-injected.
+
+Then each restored pane is matched against the manifest — exact position +
+directory first, directory alone as a fallback, and each manifest entry is
+used at most once. For a matched pane, the plugin does *not* do what
+resurrect.wezterm would do by default (relaunch the saved command, which
+would start a brand-new Claude session). Instead it types
+`cd <session-cwd> && claude --resume <session-id>` into the pane — the `cd`
+covers worktree sessions — so Claude reopens the exact conversation that was
+there before the restart. Panes with no manifest entry get the default
+restore behaviour.
 
 ## Caveats
 
