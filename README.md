@@ -51,6 +51,9 @@ curl -fsSL https://raw.githubusercontent.com/neerajsingh0101/wezterm-session-res
   -o ~/.claude/hooks/wezterm-session-restore.sh
 ```
 
+The hook needs `jq` (`brew install jq`) — without it, sessions are silently
+not tracked.
+
 Then register it in `~/.claude/settings.json`. If the file (or its `hooks`
 section) doesn't exist yet, paste this as-is; if you already have hooks,
 merge the `SessionStart` entry into your existing `hooks` object:
