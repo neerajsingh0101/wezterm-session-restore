@@ -25,7 +25,14 @@ pane* and resuming it automatically.
 
 ## Installation
 
-**1. WezTerm config** — add the plugin to your WezTerm config. That's
+**1. Install `jq`** — the Claude Code hook in step 3 depends on it; without
+it, sessions are silently not tracked:
+
+```sh
+brew install jq   # or your distro's package manager
+```
+
+**2. Add the plugin to your WezTerm config** — that's
 whichever file you already have: `~/.config/wezterm/wezterm.lua` or
 `~/.wezterm.lua` (WezTerm uses the first one it finds; if you have neither,
 create the former). A minimal complete config looks like:
@@ -43,16 +50,13 @@ return config
 Already have a config? Just add the two `session_restore` lines before
 `return config`.
 
-**2. Claude Code hook** — download the hook script:
+**3. Add the Claude Code hook** — download it into `~/.claude/hooks`:
 
 ```sh
 mkdir -p ~/.claude/hooks
 curl -fsSL https://raw.githubusercontent.com/neerajsingh0101/wezterm-session-restore/main/hooks/wezterm-session-restore.sh \
   -o ~/.claude/hooks/wezterm-session-restore.sh
 ```
-
-The hook needs `jq` (`brew install jq`) — without it, sessions are silently
-not tracked.
 
 Then register it in `~/.claude/settings.json`. If the file (or its `hooks`
 section) doesn't exist yet, paste this as-is; if you already have hooks,
