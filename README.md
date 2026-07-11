@@ -88,8 +88,15 @@ registered.
 grep wezterm-session-restore ~/.claude/settings.json
 ```
 
-Prefer editing by hand? The command above simply adds this entry to the
-`hooks.SessionStart` array:
+The output should look like this:
+
+```
+"command": "bash $HOME/.claude/hooks/wezterm-session-restore.sh"
+```
+
+### Prefer editing by hand? 
+
+The command above simply adds this entry to the `hooks.SessionStart` array:
 
 ```json
 {
