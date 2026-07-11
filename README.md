@@ -56,7 +56,10 @@ return config
 
 **3. Add the Claude Code hook**
 
-Execute the following command:
+Download the hook script. Each time a Claude Code session starts, this script
+records the session id and working directory against the WezTerm pane it is
+running in — after a restart, the plugin reads those records to resume the
+right session in the right pane:
 
 ```sh
 mkdir -p ~/.claude/hooks
@@ -64,9 +67,27 @@ curl -fsSL https://raw.githubusercontent.com/neerajsingh0101/wezterm-session-res
   -o ~/.claude/hooks/wezterm-session-restore.sh
 ```
 
-Then register it in `~/.claude/settings.json`. If the file (or its `hooks`
-section) doesn't exist yet, paste this as-is; if you already have hooks,
-merge the `SessionStart` entry into your existing `hooks` object:
+Downloading alone does nothing yet: Claude Code only runs hooks that are
+registered in `~/.claude/settings.json`. This command registers it, and
+handles every case — no settings file, no `hooks` section, or existing hooks
+(which it leaves untouched). It is safe to run more than once:
+
+```sh
+[ -f ~/.claude/settings.json ] || echo '{}' > ~/.claude/settings.json
+grep -q wezterm-session-restore ~/.claude/settings.json || {
+  jq '.hooks.SessionStart = (.hooks.SessionStart // []) + [{"hooks":[{"type":"command","command":"bash $HOME/.claude/hooks/wezterm-session-restore.sh"}]}]' \
+    ~/.claude/settings.json > ~/.claude/settings.json.tmp && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
+}
+```
+
+Check that it worked — this should print the hook line:
+
+```sh
+grep wezterm-session-restore ~/.claude/settings.json
+```
+
+Prefer editing by hand? The command above simply adds this entry to the
+`hooks.SessionStart` array:
 
 ```json
 {
