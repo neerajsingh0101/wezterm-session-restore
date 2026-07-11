@@ -107,6 +107,9 @@ session_restore.setup(config, {
 
 Layout save/restore by
 [MLFlexer/resurrect.wezterm](https://github.com/MLFlexer/resurrect.wezterm).
+Since the upstream repo is archived, this plugin depends on a
+[fork](https://github.com/neerajsingh0101/resurrect.wezterm) to guarantee the
+dependency stays available — all credit for it belongs to MLFlexer.
 
 ## License
 

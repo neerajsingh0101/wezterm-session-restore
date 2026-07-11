@@ -6,8 +6,9 @@ local mux = wezterm.mux
 -- Restores your WezTerm windows, tabs and panes after a restart — and
 -- auto-resumes the Claude Code session each pane was running.
 --
--- Layout save/restore is powered by MLFlexer/resurrect.wezterm. On top of
--- that, this plugin periodically snapshots which panes are running Claude
+-- Layout save/restore is powered by resurrect.wezterm (required via the
+-- neerajsingh0101 fork, since the upstream MLFlexer repo is archived). On top
+-- of that, this plugin periodically snapshots which panes are running Claude
 -- Code (joined with the per-pane session ids recorded by the SessionStart
 -- hook shipped in hooks/wezterm-session-restore.sh) and, on gui-startup,
 -- runs `claude --resume <id>` in the panes that had a session.
@@ -174,7 +175,7 @@ end
 function M.setup(config, opts)
   opts = opts or {}
 
-  local resurrect = wezterm.plugin.require 'https://github.com/MLFlexer/resurrect.wezterm'
+  local resurrect = wezterm.plugin.require 'https://github.com/neerajsingh0101/resurrect.wezterm'
 
   resurrect.state_manager.change_state_save_dir(state_dir .. 'state/')
   resurrect.state_manager.periodic_save {
