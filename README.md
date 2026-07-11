@@ -32,10 +32,15 @@ it, sessions are silently not tracked:
 brew install jq   # or your distro's package manager
 ```
 
-**2. Add the plugin to your WezTerm config** — that's
-whichever file you already have: `~/.config/wezterm/wezterm.lua` or
-`~/.wezterm.lua` (WezTerm uses the first one it finds; if you have neither,
-create the former). A minimal complete config looks like:
+**2. Add the plugin to your WezTerm config**
+
+Check if you have `~/.config/wezterm/wezterm.lua` or `~/.wezterm.lua`. If you
+have both, use the first one — that's the one WezTerm will choose. If you have
+neither, create `~/.config/wezterm/wezterm.lua`.
+
+If you are creating the file from scratch, add all of the following lines. If
+you already have a config file, just add the two `session_restore` lines
+before `return config`:
 
 ```lua
 local wezterm = require 'wezterm'
@@ -46,9 +51,6 @@ session_restore.setup(config)
 
 return config
 ```
-
-Already have a config? Just add the two `session_restore` lines before
-`return config`.
 
 **3. Add the Claude Code hook** — download it into `~/.claude/hooks`:
 
