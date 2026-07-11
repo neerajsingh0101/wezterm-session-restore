@@ -43,14 +43,17 @@ return config
 Already have a config? Just add the two `session_restore` lines before
 `return config`.
 
-**2. Claude Code hook** — clone this repo and run:
+**2. Claude Code hook** — download the hook script:
 
 ```sh
-./install.sh
+mkdir -p ~/.claude/hooks
+curl -fsSL https://raw.githubusercontent.com/neerajsingh0101/wezterm-session-restore/main/hooks/wezterm-session-restore.sh \
+  -o ~/.claude/hooks/wezterm-session-restore.sh
 ```
 
-(or copy `hooks/wezterm-session-restore.sh` to `~/.claude/hooks/` yourself and
-make it executable), then register it in `~/.claude/settings.json`:
+Then register it in `~/.claude/settings.json`. If the file (or its `hooks`
+section) doesn't exist yet, paste this as-is; if you already have hooks,
+merge the `SessionStart` entry into your existing `hooks` object:
 
 ```json
 {
@@ -60,7 +63,7 @@ make it executable), then register it in `~/.claude/settings.json`:
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/wezterm-session-restore.sh"
+            "command": "bash $HOME/.claude/hooks/wezterm-session-restore.sh"
           }
         ]
       }
