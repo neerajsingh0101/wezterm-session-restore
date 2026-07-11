@@ -25,8 +25,10 @@ pane* and resuming it automatically.
 
 ## Installation
 
-**1. Install `jq`** — the Claude Code hook in step 3 depends on it; without
-it, sessions are silently not tracked:
+**1. Install `jq`**
+
+The Claude Code hook in step 3 depends on it; without it, sessions are
+silently not tracked:
 
 ```sh
 brew install jq   # or your distro's package manager
@@ -52,7 +54,9 @@ session_restore.setup(config)
 return config
 ```
 
-**3. Add the Claude Code hook** — download it into `~/.claude/hooks`:
+**3. Add the Claude Code hook**
+
+Execute the following command:
 
 ```sh
 mkdir -p ~/.claude/hooks
