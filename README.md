@@ -13,7 +13,7 @@ pane* and resuming it automatically.
 ## What you get
 
 - Layout snapshots every 60 seconds (configurable), plus save-on-demand with
-  `Ctrl+Opt+S`.
+  `Ctrl+Opt+S` (see [Saving](#saving)).
 - On WezTerm startup, your windows/tabs/splits come back with their working
   directories; plain shell panes get their scrollback re-injected.
 - Panes that were running Claude Code re-run `claude --resume <session-id>`
@@ -64,6 +64,21 @@ make it executable), then register it in `~/.claude/settings.json`:
 
 That's it. Sessions started from now on are tracked; after your next restart,
 reopen WezTerm and watch everything come back.
+
+## Saving
+
+Saving is automatic: every 60 seconds the plugin snapshots your full layout
+and which Claude session each pane is running. If your machine restarts
+unexpectedly (a crash, a forced update), you lose at most the last minute of
+layout changes — session ids are recorded the moment a session starts, so
+those are never stale.
+
+Because of that interval, the latest automatic snapshot can be up to a minute
+old — a tab you opened or a Claude session you started 30 seconds ago may not
+be in it yet. That's what save-on-demand is for: before a *planned* restart,
+press `Ctrl+Opt+S`. It takes the same snapshot immediately and confirms with a
+"Session saved" notification, so the restore reflects the exact moment you
+left. The keybinding can be changed or disabled — see below.
 
 ## Options
 
