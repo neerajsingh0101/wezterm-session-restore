@@ -1,6 +1,8 @@
 # wezterm-session-restore
 
-Restart your machine without losing your terminal. This WezTerm plugin
+Restart your machine without losing your terminal. 
+
+This WezTerm plugin
 restores your **windows, tabs, panes, working directories and scrollback**
 after a restart — and **auto-resumes the Claude Code session** each pane was
 running, so `claude` comes back exactly where you left off.
